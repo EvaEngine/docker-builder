@@ -1,0 +1,17 @@
+{
+    "restartable": "rs",
+    "ignoreRoot": [
+        ".git",
+        "node_modules",
+        "bower_components",
+        "logs",
+        "public",
+        "build",
+        "test",
+        "assets",
+        "gulp",
+        "views"
+    ],
+    "verbose": true,
+    "ext": "js json pug jade coffee"
+}

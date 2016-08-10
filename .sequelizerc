@@ -1,0 +1,16 @@
+const execSync = require('child_process').execSync;
+const file = `${__dirname}/config/sequelize.json`;
+
+//为了解决Node V4需要开启--harmony才能支持--harmony_spreadcalls的问题
+const cmd = execSync(`babel-node --harmony -e " \
+var core = require('evaengine'); \
+new core.EvaEngine({ \
+  projectRoot: '${__dirname}' \
+});
+require('fs').writeFileSync('${file}', JSON.stringify(core.DI.get('config').get('db')));"
+`);
+
+
+module.exports = {
+  'config': file
+}

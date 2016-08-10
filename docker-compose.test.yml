@@ -1,0 +1,53 @@
+version: '2'
+services:
+
+  evaskeleton_source:
+      build: .
+      image: evaskeleton-source:test
+#      container_name: evaskeleton_source
+      volumes:
+        - .:/opt/htdocs/EvaSkeleton.js
+
+  evaskeleton_node:
+      build: ./dockerfiles/node
+      image: evaskeleton-node:dev
+#      container_name: evaskeleton_node
+      links:
+        - evaskeleton_redis
+        - evaskeleton_mysql
+      volumes_from:
+        - evaskeleton_source
+
+  evaskeleton_nginx:
+      build: ./dockerfiles/nginx
+      image: evaskeleton-nginx:dev
+#      container_name: evaskeleton_nginx
+      links:
+        - evaskeleton_node
+      volumes_from:
+        - evaskeleton_source
+      environment:
+        VIRTUAL_HOST: skeleton.evaengine.com
+        VIRTUAL_PORT: 80
+      networks:
+        - default
+        - nginx-proxy
+
+
+  evaskeleton_mysql:
+      build: ./dockerfiles/mysql
+      image: evaskeleton-mysql:dev
+#      container_name: evaskeleton_mysql
+      environment:
+        MYSQL_DATABASE: evaskeleton
+        MYSQL_ROOT_PASSWORD: 123456
+
+  evaskeleton_redis:
+      build: ./dockerfiles/redis
+      image: evaskeleton-redis:dev
+#      container_name: evaskeleton_redis
+
+networks:
+  nginx-proxy:
+    external:
+      name: nginx-proxy

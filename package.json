@@ -1,0 +1,74 @@
+{
+  "name": "eva_skeleton",
+  "version": "0.0.1",
+  "description": "A skeleton project based on EvaEngine ",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/EvaEngine/EvaSkeleton.js.git"
+  },
+  "scripts": {
+    "ava": "LOG_LEVEL=error NODE_ENV=test node --harmony ./node_modules/.bin/ava --verbose --serial",
+    "start": "NODE_ENV=production node --harmony ./build/app.js",
+    "test": "npm run coverage",
+    "crontab": "NODE_ENV=production babel-node --harmony ./src/crontab",
+    "coverage": "nyc -a --reporter=lcov --reporter=text --reporter=html npm run ava",
+    "dev": "nodemon --exec babel-node --harmony ./src/app.js",
+    "swagger": "rm -rf ./build && npm run build && node --harmony build/swagger/app.js",
+    "swagger-dev": "rm -rf ./build && npm run build && nodemon --ignore 'node_modules/*' --ignore '**/*.json' --exec babel-node --harmony src/swagger.js",
+    "lint": "./node_modules/.bin/eslint src/**/*.js",
+    "build": "babel -d build/ src/"
+  },
+  "ava": {
+    "files": [
+      "test/**/*.js",
+      "!test/bootstrap.js",
+      "!config/**/*.js"
+    ],
+    "source": [
+      "src/**/*.js"
+    ],
+    "failFast": true,
+    "tap": false,
+    "require": [
+      "babel-core/register"
+    ],
+    "babel": "inherit"
+  },
+  "nyc": {
+    "require": [
+      "babel-core/register"
+    ],
+    "include": [
+      "src/**/*.js"
+    ]
+  },
+  "engines": {
+    "node": ">=4.4.5"
+  },
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "cors": "^2.7.1",
+    "evaengine": "^0.1.8",
+    "mysql": "^2.11.1",
+    "pug": "^2.0.0-beta3",
+    "sequelize": "^3.22.0",
+    "serve-favicon": "^2.3.0",
+    "serve-static": "^1.11.1"
+  },
+  "devDependencies": {
+    "ava": "^0.15.2",
+    "babel-cli": "^6.10.1",
+    "babel-core": "^6.7.7",
+    "babel-eslint": "^6.0.4",
+    "babel-plugin-transform-builtin-extend": "^1.1.0",
+    "babel-polyfill": "^6.7.4",
+    "babel-preset-es2015-node4": "^2.1.0",
+    "babel-preset-stage-3": "^6.5.0",
+    "babel-register": "^6.5.2",
+    "eslint": "^2.12.0",
+    "eslint-config-airbnb": "^9.0.1",
+    "eslint-plugin-react": "^5.2.1",
+    "nyc": "^6.6.1"
+  }
+}
