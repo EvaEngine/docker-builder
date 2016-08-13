@@ -1,11 +1,11 @@
 {
-  "name": "eva_skeleton",
+  "name": "docker_builder",
   "version": "0.0.1",
-  "description": "A skeleton project based on EvaEngine ",
+  "description": "A docker build tools for EvaEngine based projects",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git://github.com/EvaEngine/EvaSkeleton.js.git"
+    "url": "git://github.com/EvaEngine/docker-builder.git"
   },
   "scripts": {
     "ava": "LOG_LEVEL=error NODE_ENV=test node --harmony ./node_modules/.bin/ava --verbose --serial",
@@ -48,27 +48,30 @@
   },
   "dependencies": {
     "body-parser": "^1.15.2",
+    "child-process-promise": "^2.0.3",
     "cors": "^2.7.1",
-    "evaengine": "^0.1.8",
-    "mysql": "^2.11.1",
+    "evaengine": "^0.1.11",
+    "on-finished": "^2.3.0",
     "pug": "^2.0.0-beta3",
-    "sequelize": "^3.22.0",
+    "qiniu": "^6.1.11",
     "serve-favicon": "^2.3.0",
     "serve-static": "^1.11.1"
   },
   "devDependencies": {
-    "ava": "^0.15.2",
-    "babel-cli": "^6.10.1",
-    "babel-core": "^6.7.7",
-    "babel-eslint": "^6.0.4",
+    "ava": "^0.16.0",
+    "babel-cli": "^6.11.4",
+    "babel-core": "^6.13.2",
+    "babel-eslint": "^6.1.2",
     "babel-plugin-transform-builtin-extend": "^1.1.0",
-    "babel-polyfill": "^6.7.4",
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
+    "babel-polyfill": "^6.13.0",
     "babel-preset-es2015-node4": "^2.1.0",
     "babel-preset-stage-3": "^6.5.0",
-    "babel-register": "^6.5.2",
-    "eslint": "^2.12.0",
-    "eslint-config-airbnb": "^9.0.1",
-    "eslint-plugin-react": "^5.2.1",
-    "nyc": "^6.6.1"
+    "eslint": "^3.3.0",
+    "eslint-plugin-import": "^1.13.0",
+    "eslint-config-airbnb": "^10.0.1",
+    "eslint-plugin-jsx-a11y": "^2.1.0",
+    "eslint-plugin-react": "^6.0.0",
+    "nyc": "^7.1.0"
   }
 }

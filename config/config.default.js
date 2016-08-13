@@ -1,4 +1,19 @@
 module.exports = {
+  dockerBuilder: {
+    rootPath: '/opt/htdocs',  //源代码根目录
+    composeSite: 'http://compose.bmqb.com',  //源代码根目录
+    projects: {   //支持的项目
+      //项目示例
+      // pdf: {
+      //   path: '',  //项目路径, 相对于根目录, 如果以斜线开头则为绝对路径
+      //   allowNoTag: false //是否允许构建非Tag版本
+      // }
+    },
+    qiniu: { //Compose 文件上传
+      key: '',
+      secret: ''
+    }
+  },
   sequelize: {
     logging: true
   },
@@ -59,8 +74,8 @@ module.exports = {
   },
   swagger: {
     info: {
-      title: 'EvaSkeleton API',
-      description: 'EvaSkeleton API',
+      title: 'Docker builder API',
+      description: 'Docker builder API',
       version: '1.0'
     },
     host: 'localhost:3000',

@@ -25,7 +25,7 @@ const config = DI.get('config').get();
 const session = DI.get('session')();
 const auth = DI.get('auth')();
 
-app.use(DI.get('trace')('eva_skeleton'));
+app.use(DI.get('trace')('docker-builder'));
 app.use(DI.get('debug')());
 app.use(express.static(path.join(__dirname, '/../public')));
 app.use(cors({
@@ -38,7 +38,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 //-----------Routers Start
 app.use('/', require('./routes/index'));
-app.use('/v1', require('./routes/api/hello_world'));
+app.use('/v1', require('./routes/api/builder'));
 //-----------Routers End
 
 

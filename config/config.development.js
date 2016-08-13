@@ -1,10 +1,15 @@
 module.exports = {
+  dockerBuilder: {
+    rootPath: '/opt/htdocs',  //源代码根目录
+    projects: {   //支持的项目
+    },
+    qiniu: { //Compose 文件上传
+      key: '',
+      secret: ''
+    }
+  },
   sequelize: {
     logging: false
-  },
-  redis: {
-    host: 'evaskeleton_redis',
-    port: 6379
   },
   db: {
     database: 'YourDatabase',

@@ -1,11 +1,11 @@
 import { EvaEngine, DI, exceptions } from 'evaengine';
-import * as HelloWorldCommands from './commands/hello_world';
+import * as BuilderCommands from './commands/build_docker';
 
 const engine = new EvaEngine({
   projectRoot: `${__dirname}/..`
 }, 'cli');
 engine.registerCommands([
-  HelloWorldCommands
+  BuilderCommands
 ]);
 
 const logger = DI.get('logger');
@@ -24,6 +24,11 @@ global.p = (...args) => {
       return logger.warn(e.message);
     }
     logger.error(e);
+  }
+
+  const redis = DI.get('redis');
+  if (redis.isConnected()) {
+    redis.cleanup();
   }
   return true;
 })();
