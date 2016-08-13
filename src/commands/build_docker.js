@@ -1,5 +1,6 @@
 import { Command, DI } from 'evaengine';
 import { spawn } from 'child-process-promise';
+import qiniu from 'qiniu';
 
 const runCommand = (command, args, options) => {
   const logger = DI.get('logger');
@@ -16,6 +17,25 @@ const runCommand = (command, args, options) => {
     logger.verbose(data.toString());
   });
   return promise;
+};
+
+
+const upload = (key, filePath) => {
+  const config = DI.get('config').get('dockerBuilder.qiniu');
+  qiniu.conf.ACCESS_KEY = config.key;
+  qiniu.conf.SECRET_KEY = config.secret;
+  const bucket = 'bmqb-compose';
+  const token = (new qiniu.rs.PutPolicy([bucket, key].join(':'))).token();
+
+  return new Promise((resolve, reject) => {
+    qiniu.io.putFile(token, key, filePath, null, (err, res) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(res);
+      }
+    });
+  });
 };
 
 export class BuildDocker extends Command {
@@ -49,7 +69,7 @@ export class BuildDocker extends Command {
     }
 
     const options = {
-      cwd: '/opt/htdocs/' + builder.project,
+      cwd: builder.cwd,
       stdio: 'inherit'
     };
     builder.status = 'running';
@@ -60,7 +80,10 @@ export class BuildDocker extends Command {
       await runCommand('git', ['checkout', builder.version], options);
       await runCommand('make', ['docker-build'], options);
       await runCommand('make', ['docker-ship'], options);
-
+      let uploadRes = await upload(`${builder.project}/${builder.version}/docker-compose.test.yml`, `${builder.cwd}/compose/${builder.version}_docker-compose.yml`);
+      logger.info('Uploaded docker-compose test yml', uploadRes);
+      uploadRes = await upload(`${builder.project}/${builder.version}/docker-compose.test.yml`, `${builder.cwd}/compose/${builder.version}_docker-compose.yml`);
+      logger.info('Uploaded docker-compose production yml', uploadRes);
       builder.status = 'finished';
       builder.finishedAt = new Date();
       await cache.namespace('docker').set(key, builder);
