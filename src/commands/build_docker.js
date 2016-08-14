@@ -80,9 +80,9 @@ export class BuildDocker extends Command {
       await runCommand('git', ['checkout', builder.version], options);
       await runCommand('make', ['docker-build'], options);
       await runCommand('make', ['docker-ship'], options);
-      let uploadRes = await upload(`${builder.project}/${builder.version}/docker-compose.test.yml`, `${builder.cwd}/compose/${builder.version}_docker-compose.yml`);
+      let uploadRes = await upload(`${builder.project}/${builder.version}/docker-compose.yml`, `${builder.cwd}/compose/${builder.version}_docker-compose.yml`);
       logger.info('Uploaded docker-compose test yml', uploadRes);
-      uploadRes = await upload(`${builder.project}/${builder.version}/docker-compose.test.yml`, `${builder.cwd}/compose/${builder.version}_docker-compose.yml`);
+      uploadRes = await upload(`${builder.project}/${builder.version}/docker-compose.production.yml`, `${builder.cwd}/compose/${builder.version}_docker-compose.production.yml`);
       logger.info('Uploaded docker-compose production yml', uploadRes);
       builder.status = 'finished';
       builder.finishedAt = new Date();

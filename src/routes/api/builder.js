@@ -73,7 +73,8 @@ router.get('/build/:project/:version', wrapper(async(req, res) => {
     finishedAt: null,
     updatedAt: new Date(),
     logUrl: '',
-    buildCommand: `babel-node src/cli.js build:docker --key=${cacheKey}`,
+    buildCommandDev: `babel-node src/cli.js build:docker --key=${cacheKey}`,
+    buildCommand: `NODE_ENV=production node build/cli.js build:docker --key=${cacheKey}`,
   };
   let builder = await cache.namespace('docker').get(cacheKey);
 
@@ -87,9 +88,8 @@ router.get('/build/:project/:version', wrapper(async(req, res) => {
   }
   await cache.namespace('docker').set(cacheKey, builder);
   const compose = {
-    development: `${config.composeSite}/${project}/docker-compose.development.${version}.yml`,
-    test: `${config.composeSite}/${project}/docker-compose.test.${version}.yml`,
-    production: `${config.composeSite}/${project}/docker-compose.production.${version}.yml`,
+    test: `${config.composeSite}/${project}/${version}/docker-compose.yml`,
+    production: `${config.composeSite}/${project}/${version}/docker-compose.production.yml`,
   };
   const run = {};
   Object.entries(compose).forEach(([key, value]) => {
