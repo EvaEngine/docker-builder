@@ -57,7 +57,8 @@
     "pug": "^2.0.0-beta3",
     "qiniu": "^6.1.11",
     "serve-favicon": "^2.3.0",
-    "serve-static": "^1.11.1"
+    "serve-static": "^1.11.1",
+    "winston": "^2.2.0"
   },
   "devDependencies": {
     "ava": "^0.16.0",
