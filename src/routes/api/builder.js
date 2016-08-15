@@ -81,7 +81,7 @@ router.get('/build/:project/:version', wrapper(async(req, res) => {
   if (!builder) {
     builder = newBuilder;
   } else {
-    if (['failed', 'finished'].includes(builder.status)) {
+    if (['failed'].includes(builder.status)) {
       builder.status = 'pending';
       builder.updatedAt = new Date();
     }
