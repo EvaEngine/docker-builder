@@ -100,10 +100,8 @@ export class BuildDocker extends Command {
 
     this.logger = this.createFileLogger(key);
     const options = {
-      cwd: builder.cwd,
-      //Docker 需要进程支持tty, 所以这里必须设置为 inherit,
-      // stdio: [process.stdin, process.stdout, process.stderr]
-      stdio: 'inherit'
+      //NOTE: 如果Docker使用了-it参数, 则Docker就需要进程使用tty, stdio必须设置为 inherit,
+      cwd: builder.cwd
     };
     builder.status = 'running';
     builder.buildCount++;
