@@ -1,6 +1,7 @@
 import { Command, DI } from 'evaengine';
 import { spawn, exec } from 'child-process-promise';
 import qiniu from 'qiniu';
+import moment from 'moment';
 
 const runCommand = (command, args, options) => {
   const logger = DI.get('logger');
@@ -66,6 +67,14 @@ export class BuildDocker extends Command {
     const builder = await cache.namespace('docker').get(key);
     if (!builder) {
       return logger.error('No build target found by %s!', key);
+    }
+
+    if (!(
+        ['failed', 'pending'].includes(builder.status) ||
+        //Timeout
+        builder.status === 'running' && moment().subtract(15, 'minutes').isAfter(moment(builder.startedAt))
+      )) {
+      return logger.error('Builder is running for %s', key);
     }
 
     const options = {
