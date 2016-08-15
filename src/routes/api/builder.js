@@ -61,7 +61,6 @@ router.get('/build/:project/:version', wrapper(async(req, res) => {
   const projectInfo = config.projects[project];
   const cwd = projectInfo.path.startsWith('/') ? projectInfo.path : [config.rootPath, projectInfo.path].join('/');
 
-  //TODO: 超时处理
   const cache = DI.get('cache');
   const cacheKey = [project, version].join(':');
   const newBuilder = {

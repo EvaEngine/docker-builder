@@ -8,7 +8,7 @@ const runCommand = (command, args, options) => {
   const promise = spawn(command, args, options);
   const childProcess = promise.childProcess;
   logger.info('-----------------------------------------------------');
-  logger.info('[Executed]', command, args, options, childProcess.pid);
+  logger.info('[Executed pid %s] %s %s', childProcess.pid, command, args.join(' '), options);
   logger.info('-----------------------------------------------------');
   if (!childProcess.stdout || !childProcess.stderr) {
     return promise;
@@ -76,7 +76,8 @@ export class BuildDocker extends Command {
         //Timeout
         builder.status === 'running' && moment().subtract(15, 'minutes').isAfter(moment(builder.startedAt))
       )) {
-      return logger.error('Builder is running for %s', key);
+      return builder.status === 'running' ? logger.error('Builder is running for %s', key) :
+        logger.error('Builder is finished for %s', key);
     }
 
     const options = {
