@@ -93,7 +93,7 @@ router.get('/build/:project/:version', wrapper(async(req, res) => {
   };
   const run = {};
   Object.entries(compose).forEach(([key, value]) => {
-    run[key] = `curl -s ${value} > docker-compose.yml && docker-compose up --no-build`;
+    run[key] = `curl -s ${value} > docker-compose.yml && docker-compose up -d --no-build`;
   });
 
   res.json(Object.assign(builder, {

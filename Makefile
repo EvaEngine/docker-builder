@@ -4,6 +4,8 @@ list:
 
 pre-build:
 	npm install -g nodemon babel-cli sequelize-cli git://github.com/AlloVince/sequelize-auto#feature/column-comments
+	apt-get install ruby
+	gem install git-up
 
 build: install
 

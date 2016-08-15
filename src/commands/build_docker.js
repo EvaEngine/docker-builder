@@ -1,5 +1,5 @@
 import { Command, DI } from 'evaengine';
-import { spawn } from 'child-process-promise';
+import { spawn, exec } from 'child-process-promise';
 import qiniu from 'qiniu';
 
 const runCommand = (command, args, options) => {
@@ -77,6 +77,7 @@ export class BuildDocker extends Command {
     builder.startedAt = new Date();
     await cache.namespace('docker').set(key, builder);
     try {
+      await runCommand('make', ['sync-codes'], options);
       await runCommand('git', ['checkout', builder.version], options);
       await runCommand('make', ['docker-build'], options);
       await runCommand('make', ['docker-ship'], options);
