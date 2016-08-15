@@ -42,3 +42,7 @@ docker-rm:
 docker-stop:
 	docker stop $(shell docker ps -a -q)
 
+deploy:
+	git pull
+	npm run build
+	supervisorctl restart all
