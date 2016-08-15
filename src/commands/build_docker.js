@@ -73,12 +73,6 @@ export class BuildDocker extends Command {
       logger.verbose(data.toString());
     });
 
-    process.stdout.on('data', (data) => {
-      logger.verbose(data.toString());
-    });
-    process.stderr.on('data', (data) => {
-      logger.verbose(data.toString());
-    });
     return promise;
   };
 
