@@ -1,5 +1,7 @@
 import { EvaEngine, DI, wrapper, exceptions } from 'evaengine';
 import kue from 'kue';
+import { spawn } from 'child-process-promise';
+import onFinished from 'on-finished';
 
 const router = EvaEngine.createRouter();
 
@@ -73,7 +75,7 @@ router.get('/build/:project/:version', wrapper(async(req, res) => {
     startedAt: null,
     finishedAt: null,
     updatedAt: new Date(),
-    logUrl: '',
+    logUrl: req.protocol + '://' + req.get('host') + `/v1/stats/${project}/${version}`,
     buildCommandDev: `babel-node src/cli.js build:docker --key=${cacheKey}`,
     buildCommand: `NODE_ENV=production node build/cli.js build:docker --key=${cacheKey}`,
   };
@@ -113,13 +115,19 @@ router.get('/build/:project/:version', wrapper(async(req, res) => {
   }));
 }));
 
-// router.get('/hello/world', wrapper(async(req, res) => {
-//   var tail = spawn("tail", ["-f", '/tmp/mysqld_query.log']);
-//   tail.stdout.pipe(res);
-//   onFinished(res, function (err, res) {
-//     console.log(111111111111111)
-//     tail.kill();
-//   })
-// }));
+router.get('/stats/:project/:version', wrapper(async(req, res) => {
+  const { project, version } = req.params;
+  const config = DI.get('config').get('dockerBuilder');
+  if (!Object.keys(config.projects).includes(project)) {
+    throw new exceptions.ResourceNotFoundException('Request project not found');
+  }
+
+  const filepath = `${__dirname}/../../../logs/${project}_${version}.log`;
+  const { childProcess } = spawn('tail', ['-f', filepath]);
+  childProcess.stdout.pipe(res);
+  onFinished(res, () => {
+    childProcess.kill();
+  })
+}));
 
 module.exports = router;

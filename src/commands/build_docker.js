@@ -46,7 +46,8 @@ export class BuildDocker extends Command {
         new (winston.transports.File)({
           filename,
           json: false,
-          level: 'debug'
+          level: 'debug',
+          options: { flags: 'w' } //Make log overwritten every time
         }),
         new (winston.transports.Console)({
           level: 'debug'
@@ -65,6 +66,12 @@ export class BuildDocker extends Command {
     if (!childProcess.stdout || !childProcess.stderr) {
       return promise;
     }
+    childProcess.stdout.on('data', (data) => {
+      logger.verbose(data.toString());
+    });
+    childProcess.stderr.on('data', (data) => {
+      logger.verbose(data.toString());
+    });
 
     process.stdout.on('data', (data) => {
       logger.verbose(data.toString());
