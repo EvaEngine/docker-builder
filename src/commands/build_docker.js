@@ -7,7 +7,9 @@ const runCommand = (command, args, options) => {
   const logger = DI.get('logger');
   const promise = spawn(command, args, options);
   const childProcess = promise.childProcess;
+  logger.info('-----------------------------------------------------');
   logger.info('[Executed]', command, args, options, childProcess.pid);
+  logger.info('-----------------------------------------------------');
   if (!childProcess.stdout || !childProcess.stderr) {
     return promise;
   }
@@ -25,7 +27,7 @@ const upload = (key, filePath) => {
   const config = DI.get('config').get('dockerBuilder.qiniu');
   qiniu.conf.ACCESS_KEY = config.key;
   qiniu.conf.SECRET_KEY = config.secret;
-  const bucket = 'bmqb-compose';
+  const bucket = config.bucket;
   const token = (new qiniu.rs.PutPolicy([bucket, key].join(':'))).token();
 
   return new Promise((resolve, reject) => {

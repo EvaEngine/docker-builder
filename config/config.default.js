@@ -10,6 +10,7 @@ module.exports = {
       // }
     },
     qiniu: { //Compose 文件上传
+      bucket: '',
       key: '',
       secret: ''
     }
