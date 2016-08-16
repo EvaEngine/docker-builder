@@ -1,7 +1,7 @@
 module.exports = {
   dockerBuilder: {
     rootPath: '/opt/htdocs',  //源代码根目录
-    composeSite: 'http://compose.bmqb.com',  //docker-compose保存网站
+    composeSite: '',  //docker-compose保存网站
     projects: {   //支持的项目
       //项目示例
       // pdf: {
