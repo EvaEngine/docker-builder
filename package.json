@@ -48,7 +48,7 @@
   },
   "dependencies": {
     "body-parser": "^1.15.2",
-    "child-process-promise": "^2.0.3",
+    "child-process-promise": "^2.1.2",
     "cors": "^2.7.1",
     "evaengine": "^0.1.11",
     "kue": "^0.11.1",
@@ -70,11 +70,11 @@
     "babel-polyfill": "^6.13.0",
     "babel-preset-es2015-node4": "^2.1.0",
     "babel-preset-stage-3": "^6.5.0",
-    "eslint": "^3.3.0",
+    "eslint": "^3.3.1",
     "eslint-plugin-import": "^1.13.0",
     "eslint-config-airbnb": "^10.0.1",
     "eslint-plugin-jsx-a11y": "^2.1.0",
-    "eslint-plugin-react": "^6.0.0",
-    "nyc": "^7.1.0"
+    "eslint-plugin-react": "^6.1.1",
+    "nyc": "^8.1.0"
   }
 }
