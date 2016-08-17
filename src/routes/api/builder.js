@@ -90,21 +90,23 @@ router.get('/build/:project/:version', wrapper(async(req, res) => {
     }
   }
   await cache.namespace('docker').set(cacheKey, builder);
-  const compose = {
-    test: `${config.composeSite}/${project}/${version}/docker-compose.yml`,
-    production: `${config.composeSite}/${project}/${version}/docker-compose.production.yml`,
-  };
+  const compose = {};
   const run = {};
-  Object.entries(compose).forEach(([key, value]) => {
-    run[key] = `curl -s ${value} > docker-compose.yml && docker-compose up -d --no-build`;
-  });
+  if (builder.status === 'finished') {
+    compose.test = `${config.composeSite}/${project}/${version}/docker-compose.yml`;
+    compose.production = `${config.composeSite}/${project}/${version}/docker-compose.production.yml`;
+    Object.entries(compose).forEach(([key, value]) => {
+      run[key] = `curl -s ${value} > docker-compose.yml && docker-compose rm -f && docker-compose up -d --no-build`;
+    });
+  }
 
+  const logger = DI.get('logger');
   kue.createQueue({
     // redis: {
     //   createClientFactory: () => DI.get('redis').getInstance()
     // }
   }).on('error', (err) => {
-    console.log(err);
+    logger.error(err);
   }).create('builder', {
     key: cacheKey
   }).save();
@@ -121,7 +123,6 @@ router.get('/stats/:project/:version', wrapper(async(req, res) => {
   if (!Object.keys(config.projects).includes(project)) {
     throw new exceptions.ResourceNotFoundException('Request project not found');
   }
-
   const filepath = `${__dirname}/../../../logs/${project}_${version}.log`;
   const { childProcess } = spawn('tail', ['-f', filepath]);
   childProcess.stdout.pipe(res);

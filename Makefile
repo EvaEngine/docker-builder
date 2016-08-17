@@ -3,15 +3,13 @@ list:
 	@echo "pre-build"
 
 pre-build:
-	npm install -g nodemon babel-cli sequelize-cli
+	apt-get install git redis-server
 
 build: install
 
 install:
 	git pull
 	npm install
-	bower install --allow-root
-	gulp build
 	npm run build
 
 migrate:

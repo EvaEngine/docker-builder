@@ -17,6 +17,7 @@
     "swagger": "rm -rf ./build && npm run build && node --harmony build/swagger/app.js",
     "swagger-dev": "rm -rf ./build && npm run build && nodemon --ignore 'node_modules/*' --ignore '**/*.json' --exec babel-node --harmony src/swagger.js",
     "lint": "./node_modules/.bin/eslint src/**/*.js",
+    "worker": "node build/worker.js",
     "build": "babel -d build/ src/"
   },
   "ava": {

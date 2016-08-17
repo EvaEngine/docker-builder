@@ -1,73 +1,111 @@
-# EvaSkeleton.js
+# EvaEngine Docker Builder
 
-A Skeleton project based on [EvaEngine.js](https://github.com/EvaEngine/EvaEngine.js)
+构建基于Docker的微服务, 主要辅助完成以下流程:
 
-## Install and Start develop:
+- 从项目代码构建Docker镜像
+- Push镜像到Docker registry(目前为阿里云)
+- 生成docker-compose yaml配置
+- 上传docker-compose 配置到七牛
+- 构建过程提供实时Log查询接口
 
-Requirements:
+工作流:
 
-- NodeJS >= v4.4.5
+![flow](https://www.websequencediagrams.com/cgi-bin/cdraw?lz=TG9jYWwtPkNJOiBnaXQgdGFnIC1hIHYxLjAKQ0ktPkJ1aWxkZXIgQVBJOiBHRVQgL3YxL2J1aWxkL3Byb2plY3QvdjEKAB8HACUKUXVldWU6IGNyZWF0ZSB0YXNrIAAdCAAWBgBQCldvcmtlcjogAFAFIGltYWdlcwAjCQAXBi0-RG9ja2VyIFJlZ2lzdHJ5OiBwdXNoABUYQ0ROOiB1cGxvYWQgY29tcG9zZS55bWwKQ0ROLT5Qcm9kdWN0aW9uOiBkb3duABURAFwPACIQY2tlci0ATwcgdXA&s=modern-blue)
 
+[link](https://www.websequencediagrams.com/?lz=TG9jYWwtPkNJOiBnaXQgdGFnIC1hIHYxLjAKQ0ktPkJ1aWxkZXIgQVBJOiBHRVQgL3YxL2J1aWxkL3Byb2plY3QvdjEKAB8HACUKUXVldWU6IGNyZWF0ZSB0YXNrIAAdCAAWBgBQCldvcmtlcjogAFAFIGltYWdlcwAjCQAXBi0-RG9ja2VyIFJlZ2lzdHJ5OiBwdXNoABUYQ0ROOiB1cGxvYWQgY29tcG9zZS55bWwKQ0ROLT5Qcm9kdWN0aW9uOiBkb3duABURAFwPACIQY2tlci0ATwcgdXA&s=modern-blue)
 
-*1*. Install global dependencies
+## Setting up
 
-```
-make pre-build
-```
+全局依赖:
 
-*2*. Install project dependencies
+- Git
+- Redis
+- Docker
+- Docker-Compose
 
-```
-make build
-```
+### 项目安装
 
-*3*. Start project (development mode)
+假设所有项目位于`/opt/htdocs`目录
 
-```
-npm run dev
-```
-
-Visit http://localhost:3000/ to see HelloWorld web page demo
-
-*4*. Generate API documents
+1. 获得本项目代码
 
 ```
-npm run swagger-dev
+cd /opt/htdocs
+git clone git@github.com:EvaEngine/docker-builder.git
 ```
 
-Visit http://localhost:15638/ to see Swagger document demo
-
-
-*5*. CLI command (development mode)
+2. 安装项目依赖
 
 ```
-babel-node --harmony src/cli.js hello:world
+cd docker-builder
+make install
 ```
 
-*6*. Run unit test
+3. Clone要构建项目代码, 假设要构建项目为`EvaEngine/EvaSkeleton.js`, 请确保git有权限访问要构建项目
 
 ```
-npm test
+cd /opt/htdocs
+git clone git@github.com:EvaEngine/EvaSkeleton.js.git
 ```
 
-## Deploy to production server
+4. 编辑`config/config.local.production.js`, 将编译项目加入配置
 
-*1*. Install global dependencies
+``` js
+module.exports = {
+  dockerBuilder: {
+    rootPath: '/opt/htdocs',  //源代码根目录
+    composeSite: 'http://compose.evaegine.com', //存放compose文件的url
+    projects: {   //支持编译的项目
+      eva_skeleton: {
+        path: 'EvaSkeleton.js',  //项目路径, 相对于根目录, 如果以斜线开头则为绝对路径
+        allowNoTag: false //是否允许构建非Tag版本
+      }
+    },
+    qiniu: { //七牛文件上传配置
+      bucket: 'XXX',
+      key: 'XXX',
+      secret: 'XXX'
+    }
+  }
+};
+```
+
+5. Web API启动:
 
 ```
-make pre-build
-```
-
-*2*. Install project dependencies
-
-```
-make build
-```
-
-*3*. Compile & Start project
-
-```
-npm run build
 npm start
 ```
 
+6. Worker启动:
+
+```
+npm run worker
+```
+
+7. 开始构建
+
+假设构建EvaSkeleton.js项目的v1.0
+
+访问`/v1/build/eva_skeleton/v1.0`, 会开始项目的构建过程, 同一项目同一版本只能有一个Worker对其进行构建
+
+## 构建约定
+
+所有微服务项目需要有自我构建的能力,本项目仅做辅助与调度
+
+### 目录结构
+
+被构建项目必须包含以下结构:
+
+```
+.
+├── Makefile
+├── compose/    存放compose yaml
+```
+
+### 
+
+被构建项目必须包含以下指令:
+
+- `make sync-code` 同步所有分支代码
+- `make docker-build` 安装项目依赖, 并将项目构建为Docker镜像
+- `make docker-ship` 将项目Docker镜像推送到Docker-Registry, 并在`compose/`生成compose配置文件
