@@ -27,28 +27,28 @@
 
 假设所有项目位于`/opt/htdocs`目录
 
-1. 获得本项目代码
+*1*. 获得本项目代码
 
 ```
 cd /opt/htdocs
 git clone git@github.com:EvaEngine/docker-builder.git
 ```
 
-2. 安装项目依赖
+*2*. 安装项目依赖
 
 ```
 cd docker-builder
 make install
 ```
 
-3. Clone要构建项目代码, 假设要构建项目为`EvaEngine/EvaSkeleton.js`, 请确保git有权限访问要构建项目
+*3*. Clone要构建项目代码, 假设要构建项目为`EvaEngine/EvaSkeleton.js`, 请确保git有权限访问要构建项目
 
 ```
 cd /opt/htdocs
 git clone git@github.com:EvaEngine/EvaSkeleton.js.git
 ```
 
-4. 编辑`config/config.local.production.js`, 将编译项目加入配置
+*4*. 编辑`config/config.local.production.js`, 将编译项目加入配置
 
 ``` js
 module.exports = {
@@ -70,19 +70,19 @@ module.exports = {
 };
 ```
 
-5. Web API启动:
+*5*. Web API启动:
 
 ```
 npm start
 ```
 
-6. Worker启动:
+*6*. Worker启动:
 
 ```
 npm run worker
 ```
 
-7. 开始构建
+*7*. 开始构建
 
 假设构建EvaSkeleton.js项目的v1.0
 
