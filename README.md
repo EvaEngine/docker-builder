@@ -82,7 +82,14 @@ npm start
 npm run worker
 ```
 
-*7*. 开始构建
+
+*7*. 登录Docker Registry
+
+```
+sudo docker login --username=XXX registry-internal.cn-hangzhou.aliyuncs.com
+```
+
+*8*. 开始构建
 
 假设构建EvaSkeleton.js项目的v1.0
 
@@ -102,7 +109,7 @@ npm run worker
 ├── compose/    存放compose yaml
 ```
 
-### 
+### 构建指令
 
 被构建项目必须包含以下指令:
 
