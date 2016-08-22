@@ -96,7 +96,7 @@ router.get('/build/:project/:version', wrapper(async(req, res) => {
     compose.test = `${config.composeSite}/${project}/${version}/docker-compose.yml`;
     compose.production = `${config.composeSite}/${project}/${version}/docker-compose.production.yml`;
     Object.entries(compose).forEach(([key, value]) => {
-      run[key] = `curl -s ${value} > docker-compose.yml | docker-compose --file - up -d --no-build`;
+      run[key] = `curl -s ${value} | docker-compose --file - up -d --no-build`;
     });
   }
 
