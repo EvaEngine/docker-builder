@@ -22,3 +22,6 @@ deploy:
 	git pull
 	npm run build
 	supervisorctl restart all
+
+docker-clear:
+	docker rmi -f $(shell docker images | grep "<none>" | awk '{print $3}')
