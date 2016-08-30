@@ -89,7 +89,11 @@ npm run worker
 sudo docker login --username=XXX registry-internal.cn-hangzhou.aliyuncs.com
 ```
 
-*8*. 开始构建
+*8*. 在Docker Registry创建初始镜像
+
+阿里云中在容器服务内选择创建镜像仓库, 镜像名与项目内镜像名一致, 仓库类型选择私有, 代码源选择本地仓库
+
+*9*. 开始构建
 
 假设构建EvaSkeleton.js项目的v1.0
 
