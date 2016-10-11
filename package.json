@@ -56,7 +56,7 @@
     "moment": "^2.15.1",
     "on-finished": "^2.3.0",
     "pug": "^2.0.0-beta3",
-    "qiniu": "^6.1.12",
+    "qiniu": "^6.1.11",
     "serve-favicon": "^2.3.0",
     "serve-static": "^1.11.1",
     "winston": "^2.2.0"
