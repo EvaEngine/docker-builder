@@ -93,10 +93,13 @@ router.get('/build/:project/:version', wrapper(async(req, res) => {
   const compose = {};
   const run = {};
   if (builder.status === 'finished') {
-    compose.test = `${config.composeSite}/${project}/${version}/docker-compose.yml`;
-    compose.production = `${config.composeSite}/${project}/${version}/docker-compose.production.yml`;
+    compose.dev = `${config.composeSite}/${project}/${version}/dev/docker-compose.yml`;
+    compose.test = `${config.composeSite}/${project}/${version}/test/docker-compose.yml`;
+    compose.production = `${config.composeSite}/${project}/${version}/production/docker-compose.yml`;
     Object.entries(compose).forEach(([key, value]) => {
-      run[key] = `curl -s ${value} | docker-compose --file - up -d --no-build`;
+      const path = [project, version, key].join('/');
+      const file = [path, 'docker-compose.yml'].join('/');
+      run[key] = `mkdir -p ${path} && curl -s ${value} -o ${file} && docker-compose -f ${file} up -d --no-build`;
     });
   }
 

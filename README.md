@@ -1,6 +1,6 @@
-# EvaEngine Docker Builder
+# EvaCD - Continuous Delivery for EvaEngine
 
-构建基于Docker的微服务, 主要辅助完成以下流程:
+基于Docker/Docker-Compose/EvaEngine的持续交付工具, 主要完成单元测试结束到生产环境部署的流程:
 
 - 从项目代码构建Docker镜像
 - Push镜像到Docker registry(目前为阿里云)

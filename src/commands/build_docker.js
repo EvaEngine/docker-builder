@@ -113,10 +113,13 @@ export class BuildDocker extends Command {
       await this.runCommand('make', ['docker-build'], options);
       await this.runCommand('make', ['docker-ship'], options);
       let uploadRes = await BuildDocker.upload(
-        `${builder.project}/${builder.version}/docker-compose.yml`, `${builder.cwd}/compose/${builder.version}_docker-compose.yml`);
+        `${builder.project}/${builder.version}/dev/docker-compose.yml`, `${builder.cwd}/compose/${builder.version}_docker-compose.dev.yml`);
+      this.logger.info('Uploaded docker-compose dev yml', uploadRes);
+      let uploadRes = await BuildDocker.upload(
+        `${builder.project}/${builder.version}/test/docker-compose.yml`, `${builder.cwd}/compose/${builder.version}_docker-compose.test.yml`);
       this.logger.info('Uploaded docker-compose test yml', uploadRes);
       uploadRes = await BuildDocker.upload(
-        `${builder.project}/${builder.version}/docker-compose.production.yml`, `${builder.cwd}/compose/${builder.version}_docker-compose.production.yml`);
+        `${builder.project}/${builder.version}/production/docker-compose.yml`, `${builder.cwd}/compose/${builder.version}_docker-compose.production.yml`);
       this.logger.info('Uploaded docker-compose production yml', uploadRes);
       builder.status = 'finished';
       builder.finishedAt = new Date();
