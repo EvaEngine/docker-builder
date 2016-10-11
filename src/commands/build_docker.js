@@ -115,7 +115,7 @@ export class BuildDocker extends Command {
       let uploadRes = await BuildDocker.upload(
         `${builder.project}/${builder.version}/dev/docker-compose.yml`, `${builder.cwd}/compose/${builder.version}_docker-compose.dev.yml`);
       this.logger.info('Uploaded docker-compose dev yml', uploadRes);
-      let uploadRes = await BuildDocker.upload(
+      uploadRes = await BuildDocker.upload(
         `${builder.project}/${builder.version}/test/docker-compose.yml`, `${builder.cwd}/compose/${builder.version}_docker-compose.test.yml`);
       this.logger.info('Uploaded docker-compose test yml', uploadRes);
       uploadRes = await BuildDocker.upload(
