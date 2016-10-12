@@ -92,14 +92,23 @@ router.get('/build/:project/:version', wrapper(async(req, res) => {
   await cache.namespace('docker').set(cacheKey, builder);
   const compose = {};
   const run = {};
+  const upgrade = {};
+  const proxy = 'docker run -p 443:443  -p 80:80 -v /var/run/docker.sock:/tmp/docker.sock:ro --net nginx-proxy --rm --name nginx-proxy -t jwilder/nginx-proxy';
   if (builder.status === 'finished') {
-    compose.dev = `${config.composeSite}/${project}/${version}/dev/docker-compose.yml`;
+  compose.dev = `${config.composeSite}/${project}/${version}/dev/docker-compose.yml`;
     compose.test = `${config.composeSite}/${project}/${version}/test/docker-compose.yml`;
     compose.production = `${config.composeSite}/${project}/${version}/production/docker-compose.yml`;
     Object.entries(compose).forEach(([key, value]) => {
       const path = [project, version, key].join('/');
       const file = [path, 'docker-compose.yml'].join('/');
-      run[key] = `mkdir -p ${path} && curl -s ${value} -o ${file} && docker-compose -f ${file} up -d --no-build`;
+      if (key === 'dev') {
+        run.dev = `curl -s ${value} -o docker-compose.latest.dev.yml && make docker-dev`;
+        //Demo will remove volumes mount
+        run.dev_demo = `curl -s ${value} | sed -E "s/ +volumes://g" | sed -E "s/ +- \.:.+//g" > docker-compose.yml && export MACHINE_IP=$(ipconfig getifaddr en0) && docker-compose up`;
+      } else {
+        run[key] = `mkdir -p ${path} && curl -s ${value} -o ${file} && docker-compose -f ${file} up -d --no-build`;
+        upgrade[key] = `mkdir -p ${path} && curl -s ${value} -o ${file} && docker-compose -f ${file} pull && docker stop $(docker ps -a -q) && docker rm -f $(docker ps -a -q) && docker-compose -f ${file} up -d --no-build`;
+      }
     });
   }
 
@@ -116,7 +125,9 @@ router.get('/build/:project/:version', wrapper(async(req, res) => {
 
   res.json(Object.assign(builder, {
     compose,
-    run
+    proxy,
+    run,
+    upgrade
   }));
 }));
 

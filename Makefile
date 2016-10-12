@@ -12,16 +12,17 @@ install:
 	npm install
 	npm run build
 
-migrate:
-	sequelize db:migrate
-
-seeder:
-	sequelize db:seed:all --harmony
-
 deploy:
 	git pull
 	npm run build
 	supervisorctl restart all
+
+
+docker-rm:
+	docker rm $(shell docker ps -a -q)
+
+docker-stop:
+	docker stop $(shell docker ps -a -q)
 
 docker-clear:
 	docker rmi -f $(shell docker images | grep "<none>" | awk '{print $3}')
