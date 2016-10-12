@@ -15,7 +15,9 @@ install:
 deploy:
 	git pull
 	npm run build
-	supervisorctl restart all
+	supervisorctl stop all
+	killall node
+	supervisorctl start all
 
 
 docker-rm:
